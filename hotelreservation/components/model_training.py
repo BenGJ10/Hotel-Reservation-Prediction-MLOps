@@ -17,7 +17,11 @@ from hotelreservation.logger.logger import logging
 from hotelreservation.exception.exception import CustomException
 
 class ModelTraining:
-
+    """
+    This class is responsible for training and evaluating the machine learning model.
+    It utilizes LightGBM as the primary algorithm for classification tasks. 
+    Model training and evaluation are performed using MLflow for tracking experiments.
+    """
     def __init__(self, train_path: str, test_path: str, model_path: str):
         self.train_path = train_path
         self.test_path = test_path
@@ -52,6 +56,9 @@ class ModelTraining:
 
             
     def train_lgbm_model(self, X_train, Y_train):
+        """
+        Train the LightGBM model using the provided training data.
+        """
         try:
             logging.info("Initializing LGBM Model")
             lgbm_model = lgbm.LGBMClassifier(random_state = self.random_search_params["random_state"])
@@ -81,6 +88,9 @@ class ModelTraining:
             raise CustomException(e, sys)
 
     def evaluate_model(self, model, X_test, Y_test):
+        """
+        Evaluate the trained model using the test dataset.
+        """
         try:
             logging.info("Starting Model Evaluation..")
             Y_pred = model.predict(X_test)
@@ -106,6 +116,9 @@ class ModelTraining:
             raise CustomException(e, sys)
         
     def save_model(self, model):
+        """
+        Save the trained model to the specified path.
+        """
         try:
             logging.info("Saving the final model..")
             os.makedirs(os.path.dirname(self.model_path), exist_ok = True)
@@ -119,6 +132,10 @@ class ModelTraining:
         
 
     def initiate_model_training(self):
+        """
+        Initiates the model training components of training pipeline.
+        Also sets up MLflow for experiment tracking.
+        """
         try:
             with mlflow.start_run():
                 logging.info("Initiating Model Training..")
@@ -137,12 +154,12 @@ class ModelTraining:
                 self.save_model(best_lgbm_model)
                 
                 logging.info("Saving the model into MLFlow")
-                mlflow.log_artifact(self.model_path, artifact_path = "models")
+                mlflow.log_artifact(self.model_path, artifact_path = "models") # Logging model artifact
 
                 logging.info("Saving params and metrics into MLFlow")
-                mlflow.log_params(best_lgbm_model.get_params())
-                mlflow.log_metrics(metrics = metrics)
-                
+                mlflow.log_params(best_lgbm_model.get_params()) # Logging model parameters
+                mlflow.log_metrics(metrics = metrics)           # Logging model metrics
+
                 print("Successfully completed Model Training..")
                 logging.info("Model training successfully completed.")
 
