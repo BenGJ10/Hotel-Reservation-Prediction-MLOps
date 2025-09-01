@@ -70,6 +70,9 @@ class DataProcessor:
         
     
     def balance_data(self, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Handle imbalanced data using SMOTE (Synthetic Minority Over-sampling Technique).
+        """
         try:
             logging.info("Handling imbalanced data")
             X = data.drop(columns = TARGET_COLUMN)
@@ -90,6 +93,9 @@ class DataProcessor:
         
 
     def feature_selection(self, data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Perform feature selection using Random Forest Classifier to identify the most important features.
+        """
         try:
             logging.info("Starting Feature Selection using Random Forest Classifier")
             X = data.drop(columns = TARGET_COLUMN)
@@ -118,6 +124,9 @@ class DataProcessor:
             raise CustomException(e, sys)
         
     def save_data(self, data: pd.DataFrame, file_path: str):
+        """
+        Save the processed data to a CSV file.
+        """
         try:
             logging.info("Saving data into CSV format")
             data.to_csv(file_path, index = False)
