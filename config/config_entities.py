@@ -18,3 +18,9 @@ PROCESSED_DIR = "artifacts/data_processed"
 PROCESSED_TRAIN_DATA_PATH = os.path.join(PROCESSED_DIR, "processed_train.csv")
 PROCESSED_TEST_DATA_PATH = os.path.join(PROCESSED_DIR, "processed_test.csv")
 TARGET_COLUMN = 'booking_status'
+
+
+"""
+Model Training related paths configuration
+"""
+MODEL_PATH = 'artifacts/model_training/lgbm.pkl'
