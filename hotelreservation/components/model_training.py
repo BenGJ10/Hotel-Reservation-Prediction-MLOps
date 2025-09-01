@@ -8,6 +8,8 @@ from scipy.stats import randint
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
+import mlflow
+import mlflow.sklearn
 from config.config_entities import *
 from config.model_params import *
 from hotelreservation.utils.main_utils import load_data, read_yaml_file
@@ -118,17 +120,31 @@ class ModelTraining:
 
     def initiate_model_training(self):
         try:
-            logging.info("Initiating Model Training..")
-            X_train, Y_train, X_test, Y_test = self.load_and_split_data()
+            with mlflow.start_run():
+                logging.info("Initiating Model Training..")
+                logging.info("Starting MLFlow experimentation..")
 
-            best_lgbm_model = self.train_lgbm_model(X_train, Y_train)
-            
-            metrics = self.evaluate_model(model = best_lgbm_model, X_test = X_test, Y_test = Y_test)
+                logging.info("Saving training and testing data into MLFlow")
+                mlflow.log_artifact(self.train_path, artifact_path = "datasets") # Logging training data artifact
+                mlflow.log_artifact(self.test_path, artifact_path = "datasets") # Logging testing data artifact
 
-            self.save_model(best_lgbm_model)
-            
-            print("Successfully completed Model Training..")
-            logging.info("Model training successfully completed.")
+                X_train, Y_train, X_test, Y_test = self.load_and_split_data()
+
+                best_lgbm_model = self.train_lgbm_model(X_train, Y_train)
+                
+                metrics = self.evaluate_model(model = best_lgbm_model, X_test = X_test, Y_test = Y_test)
+
+                self.save_model(best_lgbm_model)
+                
+                logging.info("Saving the model into MLFlow")
+                mlflow.log_artifact(self.model_path, artifact_path = "models")
+
+                logging.info("Saving params and metrics into MLFlow")
+                mlflow.log_params(best_lgbm_model.get_params())
+                mlflow.log_metrics(metrics = metrics)
+                
+                print("Successfully completed Model Training..")
+                logging.info("Model training successfully completed.")
 
         except Exception as e:
             raise CustomException(e, sys)
