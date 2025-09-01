@@ -18,3 +18,12 @@ def read_yaml_file(file_path: str) -> dict:
     
     except Exception as e:
         raise CustomException(e, sys)
+    
+def load_data(file_path: str):
+    """
+    Loading data in the form of CSV files
+    """
+    try:
+        return pd.read_csv(file_path) 
+    except Exception as e:
+        raise CustomException(e, sys)
