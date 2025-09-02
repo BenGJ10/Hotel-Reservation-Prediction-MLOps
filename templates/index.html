@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Reservation Prediction</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-maroon-800 text-white sticky top-0 z-10 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- Professional Vector Logo (Hotel-Themed SVG) -->
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3M6 21h12a1 1 0 001-1v-2m0-6v-2"></path>
+                </svg>
+                <h1 class="text-2xl font-bold">Hotel Reservation Prediction</h1>
+            </div>
+            <nav class="space-x-4">
+                <a href="/" class="text-white hover:text-gray-200">Home</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-maroon-800">Predict Reservation Status</h2>
+            <p class="text-lg text-gray-600 mt-2">Enter booking details to predict whether a customer will cancel their hotel reservation.</p>
+        </div>
+        
+        <!-- Input Section -->
+        <form id="reservationForm" action="/result" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card 1: Booking Details -->
+            <div class="card bg-gray-50 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-maroon-800 mb-4">Booking Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="lead_time" class="block text-sm font-medium text-gray-700">Lead Time (days)</label>
+                        <input type="number" id="lead_time" name="lead_time" min="0" max="100" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                    </div>
+                    <div>
+                        <label for="no_of_special_request" class="block text-sm font-medium text-gray-700">No. of Special Requests</label>
+                        <input type="number" id="no_of_special_request" name="no_of_special_request" min="0" max="5" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                    </div>
+                    <div>
+                        <label for="avg_price_per_room" class="block text-sm font-medium text-gray-700">Avg. Price per Room ($)</label>
+                        <input type="number" id="avg_price_per_room" name="avg_price_per_room" min="0" max="200" step="0.01" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2: Stay Details -->
+            <div class="card bg-gray-50 p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-maroon-800 mb-4">Stay Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="arrival_month" class="block text-sm font-medium text-gray-700">Arrival Month</label>
+                        <select id="arrival_month" name="arrival_month" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+                            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+                            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+                            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="arrival_date" class="block text-sm font-medium text-gray-700">Arrival Date</label>
+                        <select id="arrival_date" name="arrival_date" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+                            <option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                            <option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option>
+                            <option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option>
+                            <option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option>
+                            <option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option>
+                            <option value="29">29</option><option value="30">30</option><option value="31">31</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="no_of_week_nights" class="block text-sm font-medium text-gray-700">No. of Week Nights</label>
+                        <input type="number" id="no_of_week_nights" name="no_of_week_nights" min="0" max="8" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                    </div>
+                    <div>
+                        <label for="no_of_weekend_nights" class="block text-sm font-medium text-gray-700">No. of Weekend Nights</label>
+                        <input type="number" id="no_of_weekend_nights" name="no_of_weekend_nights" min="0" max="8" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3: Reservation Preferences -->
+            <div class="card bg-gray-50 p-6 rounded-lg shadow-md md:col-span-2">
+                <h3 class="text-lg font-semibold text-maroon-800 mb-4">Reservation Preferences</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="market_segment_type" class="block text-sm font-medium text-gray-700">Market Segment</label>
+                        <select id="market_segment_type" name="market_segment_type" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                            <option value="0">Aviation</option><option value="1">Complimentary</option><option value="2">Corporate</option>
+                            <option value="3">Offline</option><option value="4">Online</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="type_of_meal_plan" class="block text-sm font-medium text-gray-700">Meal Plan</label>
+                        <select id="type_of_meal_plan" name="type_of_meal_plan" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                            <option value="0">Meal Plan 1</option><option value="1">Meal Plan 2</option><option value="2">Meal Plan 3</option><option value="3">Not Selected</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="room_type_reserved" class="block text-sm font-medium text-gray-700">Room Type</label>
+                        <select id="room_type_reserved" name="room_type_reserved" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maroon-500 bg-white text-gray-800">
+                            <option value="0">Room Type 1</option><option value="1">Room Type 2</option><option value="2">Room Type 3</option>
+                            <option value="3">Room Type 4</option><option value="4">Room Type 5</option><option value="5">Room Type 6</option><option value="6">Room Type 7</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" id="submitBtn" class="md:col-span-2 bg-maroon-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-maroon-700 transition-colors flex items-center justify-center disabled:opacity-50">
+                <span id="btnText">Predict Reservation Status</span>
+                <svg id="loadingSpinner" class="animate-spin ml-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+            <p id="errorMsg" class="md:col-span-2 text-sm text-red-500 mt-2 hidden">Please fill in all fields correctly.</p>
+        </form>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-maroon-800 text-white py-4 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm">
+            Developed by <a href="https://github.com/BenGJ10" target="_blank" class="text-white hover:text-gray-200 font-medium">Ben Gregory John</a>
+        </div>
+    </footer>
+    
+    <script>
+        const form = document.getElementById('reservationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Custom Tailwind Colors
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        maroon: {
+                            600: '#7f1d1d',
+                            700: '#6b1515',
+                            800: '#581111'
+                        }
+                    }
+                }
+            }
+        };
+
+        // Form Validation
+        form.addEventListener('submit', (e) => {
+            const inputs = form.querySelectorAll('input[type="number"]');
+            let isValid = true;
+            inputs.forEach(input => {
+                const value = parseFloat(input.value);
+                const min = parseFloat(input.min);
+                const max = parseFloat(input.max);
+                if (!input.value || value < min || value > max) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                e.preventDefault();
+                errorMsg.classList.remove('hidden');
+            } else {
+                errorMsg.classList.add('hidden');
+                toggleLoading(true);
+            }
+        });
+
+        function toggleLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                btnText.textContent = 'Predicting...';
+                loadingSpinner.classList.remove('hidden');
+            } else {
+                btnText.textContent = 'Predict Reservation Status';
+                loadingSpinner.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
