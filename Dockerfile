@@ -25,9 +25,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install the package in editable mode, elimination caches
 RUN pip install --no-cache-dir -e .
 
-# Train the model before running the application
+# Add PYTHONPATH so modules resolve correctly
 ENV PYTHONPATH="/app"
-RUN python -m hotelreservation.pipeline.training_pipeline
 
 # Expose the port that Flask will run on
 EXPOSE 5000
