@@ -32,7 +32,7 @@ pipeline{
 
         stage('Building and Pushing Docker image to Google Container Registry'){
             steps{
-                withCredentials([file(credentialId : 'GCP-MLOps-HRP', variable : 'GCP_Credentials')]){
+                withCredentials([file(credentialsId : 'GCP-MLOps-HRP', variable : 'GCP_Credentials')]){
                     script{
                         echo 'Building and Pushing Docker image to Google Container Registry'
                         sh '''
