@@ -19,11 +19,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the application code
 COPY . .
 
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
 # Install the package in editable mode, elimination caches
 RUN pip install --no-cache-dir -e .
 
 # Train the model before running the application
-ENV PYTHONPATH="/app:$PYTHONPATH"
+ENV PYTHONPATH="/app"
 RUN python -m hotelreservation.pipeline.training_pipeline
 
 # Expose the port that Flask will run on
