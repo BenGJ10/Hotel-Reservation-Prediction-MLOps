@@ -36,13 +36,13 @@ pipeline{
 
         stage('Build and Push Docker image to Google Container Registry') {
             steps {
-                withCredentials([file(credentialsId: 'GCP-MLOps-HRP', variable: 'GCP_Credentials')]) {
+                withCredentials([file(credentialsId: 'gcp_mlops_hrp', variable: 'gcp_credentials')]) {
                     script {
                         echo 'Building and Pushing Docker image to Google Container Registry'
                         sh '''
                         export PATH=$PATH:${GCLOUD_PATH}
 
-                        gcloud auth activate-service-account --key-file="${GCP_Credentials}"
+                        gcloud auth activate-service-account --key-file="${gcp_credentials}"
                         
                         gcloud config set project ${GCP_PROJECT}
                         
@@ -60,7 +60,7 @@ pipeline{
         }
          stage('Run Training Pipeline inside Docker') {
             steps {
-                withCredentials([file(credentialsId: 'GCP-MLOps-HRP', variable: 'GCP_Credentials')]) {
+                withCredentials([file(credentialsId: 'gcp_mlops_hrp', variable: 'gcp_credentials')]) {
                     script {
                         echo 'Running training pipeline inside Docker container...'
                         echo 'Debugging Errors..'
@@ -69,7 +69,7 @@ pipeline{
                         sh 'echo gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest'
                         sh '''
                         docker run --rm \
-                            -v ${GCP_Credentials}:/app/key.json \
+                            -v ${gcp_credentials}:/app/key.json \
                             -e GOOGLE_APPLICATION_CREDENTIALS=/app/key.json \
                             gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest \
                             python hotelreservation/pipeline/training_pipeline.py
