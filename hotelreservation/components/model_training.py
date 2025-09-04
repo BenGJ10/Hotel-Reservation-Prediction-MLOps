@@ -10,8 +10,8 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_sc
 
 import mlflow
 import mlflow.sklearn
-from config.config_entities import *
-from config.model_params import *
+from hotelreservation.config.config_entities import *
+from hotelreservation.config.model_params import *
 from hotelreservation.utils.main_utils import load_data, read_yaml_file
 from hotelreservation.logger.logger import logging
 from hotelreservation.exception.exception import CustomException

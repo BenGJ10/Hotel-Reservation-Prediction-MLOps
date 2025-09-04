@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from imblearn.over_sampling import SMOTE
 
-from config.config_entities import *
+from hotelreservation.config.config_entities import *
 from hotelreservation.utils.main_utils import load_data, read_yaml_file
 from hotelreservation.logger.logger import logging
 from hotelreservation.exception.exception import CustomException

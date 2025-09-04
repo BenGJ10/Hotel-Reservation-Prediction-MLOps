@@ -1,7 +1,7 @@
 import os
 import sys
 
-from config.config_entities import *
+from hotelreservation.config.config_entities import *
 from hotelreservation.utils.main_utils import read_yaml_file
 from hotelreservation.logger.logger import logging
 from hotelreservation.exception.exception import CustomException
