@@ -31,6 +31,21 @@ Hotels face significant challenges due to last-minute cancellations and no-shows
 
 ---
 
+## Screenshots
+
+- **Prediction Home Page**
+![Prediction Home](images/home.png)
+
+- **Prediction Result Screen**
+![Prediction Result](images/result.png)
+
+- **MLFlow Artifacts**
+![MLFlow Artifacts](images/mlflow.png)
+
+- **¸Jenkins CI-CD Pipelines**
+![Jenkins Pipelines](images/jenkins.png)
+---
+
 ## Tech Stack
 
 - Programming & ML: `Python, Scikit-learn, Pandas, NumPy`
@@ -97,6 +112,111 @@ Hotels face significant challenges due to last-minute cancellations and no-shows
 
 
 ---
+
+## Docker and Jenkins Setup
+
+### **Step 1: Setup Jenkins Container**
+
+1. **Build Jenkins Docker Image**
+   
+```bash
+   cd jenkins
+   docker build -t jenkins-hrp .
+   docker images
+```
+2. **Run Jenkins Container**
+  
+```bash
+  docker run -d --name jenkins-hrp \
+    --privileged \
+    -p 8080:8080 -p 50000:50000 \
+    -v //var/run/docker.sock:/var/run/docker.sock \
+    -v jenkins_home:/var/jenkins_home \
+    jenkins-hrp
+```
+5. **Verify Jenkins Container**
+
+```bash
+docker ps
+docker logs jenkins-hrp
+```
+
+### **Step 2: Access Jenkins and Complete Setup**
+
+1. Open [localhost:8080](localhost:8080) in a browser.
+
+2. Paste the password copied from logs.
+
+3. Install suggested plugins.
+
+4. Create your Jenkins user credentials and complete the setup.
+
+### **Step 3: Install Python and Packages in Jenkins Container**
+
+1. **Access Jenkins container terminal:**
+```bash
+docker exec -u root -it jenkins-hrp bash
+```
+
+2. **Install Python 3, pip, and venv:**
+```bash
+apt update -y
+apt install -y python3 python3-pip python3-venv
+ln -s /usr/bin/python3 /usr/bin/python
+exit
+```
+
+3. **Restart Jenkins container:**
+```bash
+docker restart jenkins-hrp
+```
+
+### **Step 4: Build and Run Project Docker Image**
+
+1. **Build project Docker image:**
+
+```bash
+docker build -t your_project_image .
+```
+
+2. **Run the project container:**
+```bash
+docker run -d -p 5000:5000 your_project_image
+```
+
+### **Step 5: Install Google Cloud CLI in Jenkins Container**
+
+```bash
+docker exec -u root -it jenkins-hrp bash
+
+apt-get update -y
+
+apt-get install -y curl apt-transport-https ca-certificates gnupg
+
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+echo "deb https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+apt-get update && apt-get install -y google-cloud-sdk
+
+gcloud --version
+
+exit
+```
+
+### **Step 6: Grant Docker Permissions to Jenkins User**
+
+```bash
+docker exec -u root -it jenkins-hrp bash
+
+groupadd docker
+
+usermod -aG docker jenkins
+
+usermod -aG root jenkins
+
+exit
+```
 
 ## Contributors
 
