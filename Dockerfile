@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY . .
 
 # Install the package in editable mode, elimination caches
+RUN pip install --upgrade pip
+
+RUN pip install -r requirements.txt
+
 RUN pip install --no-cache-dir -e .
 
 # Train the model before running the application
