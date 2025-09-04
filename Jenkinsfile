@@ -58,25 +58,5 @@ pipeline{
                 }
             }
         }
-         stage('Run Training Pipeline inside Docker') {
-            steps {
-                withCredentials([file(credentialsId: 'gcp_mlops_hrp', variable: 'gcp_credentials')]) {
-                    script {
-                        echo 'Running training pipeline inside Docker container...'
-                        echo 'Debugging Errors..'
-                        echo "IMAGE_NAME=${IMAGE_NAME}"
-                        echo "GCP_PROJECT=${GCP_PROJECT}"
-                        sh 'echo gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest'
-                        sh '''
-                        docker run --rm \
-                            -v ${gcp_credentials}:/app/key.json \
-                            -e GOOGLE_APPLICATION_CREDENTIALS=/app/key.json \
-                            gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest \
-                            python hotelreservation/pipeline/training_pipeline.py
-                        '''
-                    }
-                }
-            }
-        }
     }
 }
