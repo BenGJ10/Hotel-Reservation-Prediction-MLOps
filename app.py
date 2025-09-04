@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 from flask import Flask, render_template, request, jsonify
-from config.config_entities import MODEL_PATH
+from hotelreservation.config.config_entities import MODEL_PATH
 
 app = Flask(__name__)
 

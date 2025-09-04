@@ -28,6 +28,9 @@ RUN pip install --no-cache-dir -e .
 # Add PYTHONPATH so modules resolve correctly
 ENV PYTHONPATH="/app"
 
+# Train the model before running the application
+RUN python hotelreservation/pipeline/training_pipeline.py
+
 # Expose the port that Flask will run on
 EXPOSE 5000
 
