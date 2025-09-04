@@ -38,20 +38,13 @@ pipeline{
             steps {
                 withCredentials([file(credentialsId: 'gcp_mlops_hrp', variable: 'gcp_credentials')]) {
                     script {
-                        echo 'Building and Pushing Docker image to Google Container Registry'
+                        echo 'Building Docker image with GCP credentials...'
                         sh '''
-                        export PATH=$PATH:${GCLOUD_PATH}
-
-                        gcloud auth activate-service-account --key-file="${gcp_credentials}"
                         
-                        gcloud config set project ${GCP_PROJECT}
-                        
-                        gcloud auth configure-docker --quiet
+                        docker build \
+                            --build-arg GCP_CREDS_FILE="${gcp_credentials}" \
+                            -t gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest .
 
-                        IMAGE_NAME=hrp-mlops-proj
-
-                        docker build -t gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest .
-                        
                         docker push gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest
                         '''
                     }

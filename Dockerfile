@@ -26,6 +26,13 @@ RUN pip install -r requirements.txt
 
 RUN pip install --no-cache-dir -e .
 
+# Add a build ARG for credentials
+ARG GCP_CREDS_FILE
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/gcp_key.json
+
+# Copy credentials into the image during build
+COPY ${GCP_CREDS_FILE} /app/gcp_key.json
+
 # Train the model before running the application
 RUN python hotelreservation/pipeline/training_pipeline.py
 
