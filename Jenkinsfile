@@ -63,6 +63,10 @@ pipeline{
                 withCredentials([file(credentialsId: 'GCP-MLOps-HRP', variable: 'GCP_Credentials')]) {
                     script {
                         echo 'Running training pipeline inside Docker container...'
+                        echo 'Debugging Errors..'
+                        echo "IMAGE_NAME=${IMAGE_NAME}"
+                        echo "GCP_PROJECT=${GCP_PROJECT}"
+                        sh 'echo gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest'
                         sh '''
                         docker run --rm \
                             -v ${GCP_Credentials}:/app/key.json \
