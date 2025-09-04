@@ -5,6 +5,7 @@ pipeline{
         VENV_DIR = 'venv'
         GCP_PROJECT = "affable-visitor-470408-s2"
         GCLOUD_PATH = "/var/jenkins_home/google-cloud-sdk/bin"
+        IMAGE_NAME = "hrp-mlops-proj"
     }
     stages{
         stage('Cloning GitHub repository: Hotel Reservation Prediction to Jenkins'){
@@ -52,6 +53,22 @@ pipeline{
                         docker build -t gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest .
                         
                         docker push gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest
+                        '''
+                    }
+                }
+            }
+        }
+         stage('Run Training Pipeline inside Docker') {
+            steps {
+                withCredentials([file(credentialsId: 'GCP-MLOps-HRP', variable: 'GCP_Credentials')]) {
+                    script {
+                        echo 'Running training pipeline inside Docker container...'
+                        sh '''
+                        docker run --rm \
+                            -v ${GCP_Credentials}:/app/key.json \
+                            -e GOOGLE_APPLICATION_CREDENTIALS=/app/key.json \
+                            gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest \
+                            python hotelreservation/pipeline/training_pipeline.py
                         '''
                     }
                 }
