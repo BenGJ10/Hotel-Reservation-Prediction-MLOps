@@ -5,7 +5,6 @@ pipeline{
         VENV_DIR = 'venv'
         GCP_PROJECT = 'affable-visitor-470408-s2'
         GCLOUD_PATH = '/var/jenkins_home/google-cloud-sdk/bin'
-        IMAGE_NAME = 'hrp-mlops-proj'
     }
     stages{
         stage('Cloning GitHub repository: Hotel Reservation Prediction to Jenkins'){
@@ -40,12 +39,17 @@ pipeline{
                     script {
                         echo 'Building Docker image with GCP credentials...'
                         sh '''
+                        export PATH=$PATH:${GCLOUD_PATH}
 
-                        docker build \
-                            --build-arg GCP_CREDS_FILE="${gcp_creds}" \
-                            -t gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest .
+                        gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 
-                        docker push gcr.io/${GCP_PROJECT}/${IMAGE_NAME}:latest
+                        gcloud config set project ${GCP_PROJECT}
+
+                        gcloud auth configure-docker --quiet
+
+                        docker build -t gcr.io/${GCP_PROJECT}/ml-project:latest .
+
+                        docker push gcr.io/${GCP_PROJECT}/ml-project:latest 
                         '''
                     }
                 }
