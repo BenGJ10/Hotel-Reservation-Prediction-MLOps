@@ -3,7 +3,7 @@ import sys
 import traceback
 
 class CustomException(Exception):
-    """ Custom exception class for network security related errors """
+    """ Custom exception class for reservation prediction related errors """
 
     def __init__(self, error_message, error_details:sys):
         self.error_message = error_message
